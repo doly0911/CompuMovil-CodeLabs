@@ -17,6 +17,8 @@ class DogListFragment : Fragment() {
     private lateinit var names: Array<String>
     private lateinit var descriptions: Array<String>
     private lateinit var urls: Array<String>
+    private lateinit var listener: OnDogSelected
+
 
     companion object {
 
@@ -28,14 +30,21 @@ class DogListFragment : Fragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
-        if (context != null) {
+        if (context is OnDogSelected) {
+            listener = context
+        } else {
+            throw ClassCastException(
+                "$context must implement OnDogSelected."
+            )
+        }
+
             // Get dog names and descriptions.
             val resources = context.resources
             names = resources.getStringArray(R.array.names)
             descriptions = resources.getStringArray(R.array.descriptions)
             urls = resources.getStringArray(R.array.urls)
 
-            // Get dog images.
+            // Get dog images
             val typedArray = resources.obtainTypedArray(R.array.images)
             val imageCount = names.size
             imageResIds = IntArray(imageCount)
@@ -43,7 +52,7 @@ class DogListFragment : Fragment() {
                 imageResIds[i] = typedArray.getResourceId(i, 0)
             }
             typedArray.recycle()
-        }
+
     }
 
     override fun onCreateView(inflater: LayoutInflater,
@@ -73,6 +82,11 @@ class DogListFragment : Fragment() {
             val dog = DogModel(imageResIds[position], names[position],
                 descriptions[position], urls[position])
             viewHolder.setData(dog)
+
+            viewHolder.itemView.setOnClickListener {
+                listener.onDogSelected(dog)
+            }
+
         }
 
         override fun getItemCount() = names.size
@@ -87,6 +101,10 @@ class DogListFragment : Fragment() {
         fun setData(dogModel: DogModel) {
             recyclerItemDogListBinding.dogModel = dogModel
         }
+    }
+
+    interface OnDogSelected {
+        fun onDogSelected(dogModel: DogModel)
     }
 
 }

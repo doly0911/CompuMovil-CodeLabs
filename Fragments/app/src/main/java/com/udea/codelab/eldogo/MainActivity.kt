@@ -3,7 +3,9 @@ package com.udea.codelab.eldogo
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 
-class MainActivity : AppCompatActivity() {
+
+class MainActivity : AppCompatActivity(),  DogListFragment.OnDogSelected {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -21,4 +23,17 @@ class MainActivity : AppCompatActivity() {
                 .commit()
         }
     }
+
+    override fun onDogSelected(dogModel: DogModel) {
+
+        val detailsFragment =
+            DogDetailsFragment.newInstance(dogModel)
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.root_layout, detailsFragment, "dogDetails")
+            .addToBackStack(null)
+            .commit()
+
+    }
+
 }
