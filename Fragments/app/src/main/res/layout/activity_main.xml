@@ -9,11 +9,7 @@
     android:paddingBottom="@dimen/recycler_margin_vertical">
 
     <!-- Adding a Fragment Statically -->
-    <fragment
-        android:id="@+id/details_fragment"
-        class="com.udea.codelab.eldogo.DogDetailsFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+
 
 
 
